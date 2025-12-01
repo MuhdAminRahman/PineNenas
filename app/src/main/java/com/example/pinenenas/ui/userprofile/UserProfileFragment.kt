@@ -1,5 +1,6 @@
 package com.example.pinenenas.ui.userprofile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.pinenenas.MapsActivity
 import com.example.pinenenas.databinding.FragmentProfileBinding
 import kotlinx.coroutines.launch
 
@@ -48,6 +50,19 @@ class UserProfileFragment : Fragment() {
                         binding.textContactNumber.text = userDetail.contactNumber
                         binding.textShopName.text = userDetail.shopName
                         binding.textShopDescription.text = userDetail.shopDescription
+                        if (userDetail.shopLatitude != null && userDetail.shopLongitude != null) {
+                            binding.buttonViewOnMap.visibility = View.VISIBLE
+                            binding.buttonViewOnMap.setOnClickListener {
+                                val intent = Intent(activity, MapsActivity::class.java).apply {
+                                    putExtra("MODE", "VIEW")
+                                    putExtra("latitude", userDetail.shopLatitude)
+                                    putExtra("longitude", userDetail.shopLongitude)
+                                }
+                                startActivity(intent)
+                            }
+                        } else {
+                            binding.buttonViewOnMap.visibility = View.GONE
+                        }
                     } else {
                         binding.textFullName.text = "Profile not available."
                         binding.textAge.text = ""

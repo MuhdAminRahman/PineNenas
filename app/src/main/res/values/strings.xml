@@ -41,4 +41,5 @@
     <string name="save_and_continue">Save and Continue</string>
     <string name="account">Account</string>
     <string name="logout">Logout</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>
