@@ -22,9 +22,8 @@ data class UserDetail(
     val age: Int,
     val contactNumber: String,
     val shopName: String,
-    val shopDescription: String
-    // You can add location fields here later
-    // val shopLatitude: Double?,
-    // val shopLongitude: Double?
+    val shopDescription: String,
+    val shopLatitude: Double?,
+    val shopLongitude: Double?
 )
     

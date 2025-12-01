@@ -31,7 +31,9 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
         age: String, // Take as String for validation, then convert
         contact: String,
         shopName: String,
-        shopDesc: String
+        shopDesc: String,
+        latitude: Double?,
+        longitude: Double?
     ) {
         // Basic validation
         if (fullName.isBlank() || age.isBlank() || contact.isBlank() || shopName.isBlank()) {
@@ -44,14 +46,14 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
             val userDetail = UserDetail(
                 userId = userId,
                 fullName = fullName,
-                age = age.toIntOrNull() ?: 0, // Convert age to Int, default to 0 if invalid
+                age = age.toIntOrNull() ?: 0,
                 contactNumber = contact,
                 shopName = shopName,
-                shopDescription = shopDesc
+                shopDescription = shopDesc,
+                shopLatitude = latitude,
+                shopLongitude = longitude
             )
             userDetailDao.saveProfile(userDetail)
-
-            // After successfully saving, mark onboarding as complete.
             sessionManager.saveOnboardingStatus(true)
         }
     }

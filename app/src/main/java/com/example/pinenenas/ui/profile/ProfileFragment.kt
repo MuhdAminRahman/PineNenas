@@ -1,5 +1,6 @@
 package com.example.pinenenas.ui.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.example.pinenenas.MapsActivity
 import com.example.pinenenas.databinding.FragmentProfileBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -45,6 +47,19 @@ class ProfileFragment : Fragment() {
                     binding.textContactNumber.text = userDetail.contactNumber
                     binding.textShopName.text = userDetail.shopName
                     binding.textShopDescription.text = userDetail.shopDescription
+                    if (userDetail.shopLatitude != null && userDetail.shopLongitude != null) {
+                        binding.buttonViewOnMap.visibility = View.VISIBLE
+                        binding.buttonViewOnMap.setOnClickListener {
+                            val intent = Intent(activity, MapsActivity::class.java).apply {
+                                putExtra("MODE", "VIEW")
+                                putExtra("latitude", userDetail.shopLatitude)
+                                putExtra("longitude", userDetail.shopLongitude)
+                            }
+                            startActivity(intent)
+                        }
+                    } else {
+                        binding.buttonViewOnMap.visibility = View.GONE
+                    }
                 } else {
                     // The userDetail is null, which means no profile exists yet.
                     // You could show a message or a button to create one.
