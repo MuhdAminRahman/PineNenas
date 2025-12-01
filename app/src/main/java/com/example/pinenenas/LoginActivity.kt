@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider // Import ViewModelProvider
-import androidx.navigation.findNavController
 import com.example.pinenenas.databinding.ActivityLoginBinding
 import com.example.pinenenas.ui.login.LoginResult
 import com.example.pinenenas.ui.login.LoginViewModel

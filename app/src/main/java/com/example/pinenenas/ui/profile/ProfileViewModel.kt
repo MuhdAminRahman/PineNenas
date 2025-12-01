@@ -4,11 +4,10 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pinenenas.data.local.AppDatabase
-import com.example.pinenenas.data.local.SessionManager // Import SessionManager
+import com.example.pinenenas.data.local.SessionManager
 import com.example.pinenenas.data.model.UserDetail
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest // Import flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 

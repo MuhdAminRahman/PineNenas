@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.github.mikephil.charting.data.BarEntry
-import java.util.*
 import kotlin.collections.ArrayList
 
 class ScheduleViewModel : ViewModel() {
