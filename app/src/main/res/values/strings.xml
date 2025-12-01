@@ -42,4 +42,6 @@
     <string name="account">Account</string>
     <string name="logout">Logout</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="search_for_a_location">Search for a Location</string>
+    <string name="confirm_this_location">Confirm This Location</string>
 </resources>
