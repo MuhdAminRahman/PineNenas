@@ -1,41 +1,30 @@
-package com.example.pinenenas.ui.register
+package com.example.pinenenas
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import com.example.pinenenas.databinding.FragmentRegisterBinding
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import com.example.pinenenas.databinding.ActivityRegisterBinding
 import com.example.pinenenas.ui.login.LoggedInUserView
-import com.example.pinenenas.ui.login.LoginViewModelFactory
+import com.example.pinenenas.ui.register.RegisterResult
 import com.example.pinenenas.ui.register.RegisterViewModel
-import com.example.pinenenas.R
-class RegisterFragment : Fragment() {
 
-    private lateinit var registerViewModel: RegisterViewModel
-    private var _binding: FragmentRegisterBinding? = null
-    private val binding get() = _binding!!
+class RegisterActivity : AppCompatActivity() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentRegisterBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    // Use 'by viewModels()' to get the ViewModel instance
+    private val registerViewModel: RegisterViewModel by viewModels()
+    private lateinit var binding: ActivityRegisterBinding
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        registerViewModel = ViewModelProvider(this, LoginViewModelFactory(requireContext()))
-            .get(RegisterViewModel::class.java)
-
+        // Set up all the UI listeners and observers
         setupFormValidation()
         setupRegisterButton()
         setupLoginNavigation()
@@ -63,9 +52,8 @@ class RegisterFragment : Fragment() {
         binding.confirmPassword.addTextChangedListener(textWatcher)
         binding.displayName.addTextChangedListener(textWatcher)
 
-        registerViewModel.registerFormState.observe(viewLifecycleOwner) { formState ->
+        registerViewModel.registerFormState.observe(this) { formState ->
             binding.register.isEnabled = formState.isDataValid
-
             formState.usernameError?.let { binding.username.error = getString(it) }
             formState.emailError?.let { binding.email.error = getString(it) }
             formState.passwordError?.let { binding.password.error = getString(it) }
@@ -88,20 +76,24 @@ class RegisterFragment : Fragment() {
     }
 
     private fun setupLoginNavigation() {
+        // When the login link is clicked, finish this activity to go back to the previous one (LoginActivity)
         binding.loginLink.setOnClickListener {
-            findNavController().navigateUp()
+            finish()
         }
     }
 
     private fun observeRegisterResult() {
-        registerViewModel.registerResult.observe(viewLifecycleOwner) { result ->
+        registerViewModel.registerResult.observe(this) { result ->
             binding.loading.visibility = View.GONE
-
             when {
                 result.loading -> binding.loading.visibility = View.VISIBLE
                 result.success != null -> {
                     updateUiWithUser(result.success)
-                    findNavController().navigate(R.id.nav_home)
+                    // After successful registration, navigate back to LoginActivity
+                    val intent = Intent(this, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    startActivity(intent)
+                    finish()
                 }
                 result.error != null -> showRegisterFailed(result.error)
             }
@@ -109,16 +101,11 @@ class RegisterFragment : Fragment() {
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = "Welcome ${model.displayName}!"
-        Toast.makeText(requireContext(), welcome, Toast.LENGTH_LONG).show()
+        val welcome = "Welcome ${model.displayName}! Please log in."
+        Toast.makeText(this, welcome, Toast.LENGTH_LONG).show()
     }
 
     private fun showRegisterFailed(error: String) {
-        Toast.makeText(requireContext(), "Registration failed: $error", Toast.LENGTH_LONG).show()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        Toast.makeText(this, "Registration failed: $error", Toast.LENGTH_LONG).show()
     }
 }

@@ -1,8 +1,9 @@
 package com.example.pinenenas.ui.register
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel // <-- CHANGE: Inherit from AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import android.util.Patterns
 import com.example.pinenenas.data.Result
@@ -11,7 +12,11 @@ import com.example.pinenenas.data.LoginRepository
 import com.example.pinenenas.ui.login.LoggedInUserView
 import kotlinx.coroutines.launch
 
-class RegisterViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+// CHANGE: Inherit from AndroidViewModel and pass application to it.
+class RegisterViewModel(application: Application) : AndroidViewModel(application) {
+
+    // CHANGE: Initialize LoginRepository here, using the application context.
+    private val loginRepository: LoginRepository = LoginRepository(application)
 
     private val _registerForm = MutableLiveData<RegisterFormState>()
     val registerFormState: LiveData<RegisterFormState> = _registerForm
@@ -23,6 +28,7 @@ class RegisterViewModel(private val loginRepository: LoginRepository) : ViewMode
         viewModelScope.launch {
             _registerResult.value = RegisterResult(loading = true)
 
+            // The rest of the function remains the same.
             val result = loginRepository.register(username, email, password, displayName)
 
             if (result is Result.Success) {
@@ -33,6 +39,7 @@ class RegisterViewModel(private val loginRepository: LoginRepository) : ViewMode
         }
     }
 
+    // All other functions (registerDataChanged, isUserNameValid, etc.) remain unchanged.
     fun registerDataChanged(username: String, email: String, password: String, confirmPassword: String, displayName: String) {
         if (!isUserNameValid(username)) {
             _registerForm.value = RegisterFormState(usernameError = R.string.invalid_username)

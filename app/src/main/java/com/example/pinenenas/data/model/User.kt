@@ -1,4 +1,4 @@
-package com.example.pinenenas.data
+package com.example.pinenenas.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
