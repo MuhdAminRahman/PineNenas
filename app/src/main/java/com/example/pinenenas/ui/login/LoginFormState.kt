@@ -1,7 +1,4 @@
 package com.example.pinenenas.ui.login
-
-import androidx.annotation.StringRes
-
 /**
  * Data validation state of the login form.
  */

@@ -10,7 +10,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pinenenas.databinding.ActivityRegisterBinding
 import com.example.pinenenas.ui.login.LoggedInUserView
-import com.example.pinenenas.ui.register.RegisterResult
 import com.example.pinenenas.ui.register.RegisterViewModel
 
 class RegisterActivity : AppCompatActivity() {
