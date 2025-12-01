@@ -3,6 +3,8 @@ package com.example.pinenenas.data
 import com.example.pinenenas.data.model.LoggedInUser
 
 import android.content.Context
+import com.example.pinenenas.data.local.AppDatabase
+import com.example.pinenenas.data.model.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -16,7 +18,7 @@ class LoginRepository(private val context: Context) {
     suspend fun login(username: String, password: String): Result<LoggedInUser> {
         return try {
             val user = withContext(Dispatchers.IO) {
-                database.userDao().login(username, password)
+                database.userDao().loginUser(username, password)
             }
             if (user != null) {
                 Result.Success(LoggedInUser(user.id.toString(), user.displayName))
