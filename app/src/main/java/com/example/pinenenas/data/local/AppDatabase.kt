@@ -6,11 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.pinenenas.data.model.User
 import com.example.pinenenas.data.model.UserDetail
+import com.example.pinenenas.data.model.Announcement
 
-@Database(entities = [User::class, UserDetail::class], version = 2, exportSchema = false)
+@Database(entities = [User::class, UserDetail::class, Announcement::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun userDetail(): UserDetailDao
+    abstract fun announcementDao(): AnnouncementDao
 
     companion object {
         @Volatile

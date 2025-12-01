@@ -1,51 +1,59 @@
-// src/main/java/com/example/pinenenas/ui/schedule/ScheduleViewModel.kt
-
 package com.example.pinenenas.ui.schedule
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.github.mikephil.charting.data.BarEntry
-import kotlin.collections.ArrayList
 
 class ScheduleViewModel : ViewModel() {
 
-    // This LiveData will hold the list of planting entries for the chart.
     private val _plantingEntries = MutableLiveData<List<BarEntry>>()
     val plantingEntries: LiveData<List<BarEntry>> = _plantingEntries
 
-    // This LiveData will hold the list of harvest entries for the chart.
     private val _harvestEntries = MutableLiveData<List<BarEntry>>()
     val harvestEntries: LiveData<List<BarEntry>> = _harvestEntries
 
-    // init block is a good place to load initial data.
     init {
         loadScheduleData()
     }
 
     /**
-     * Fetches the schedule data.
-     * In a real app, this would fetch data from a repository (which might get it from a
-     * Room database or a remote server).
+     * Creates dummy data for planting and harvesting schedules.
+     * In a real app, this data would come from a repository.
      */
     private fun loadScheduleData() {
-        // --- This is where you would fetch your real user data ---
-        // For demonstration, we'll use the same sample data.
+        // Dummy data for quantities planted each month (Jan=0, Feb=1, ...)
+        val monthlyPlantings = floatArrayOf(10f, 15f, 12f, 18f, 25f, 20f, 15f, 10f, 22f, 30f, 18f, 12f)
+
         val plantings = ArrayList<BarEntry>()
-        plantings.add(BarEntry(0f, 1f)) // Planted in January
-        plantings.add(BarEntry(2f, 1f)) // Planted in March
+        monthlyPlantings.forEachIndexed { index, quantity ->
+            plantings.add(BarEntry(index.toFloat(), quantity))
+        }
 
-        // --- Data processing logic should be in the ViewModel, not the Fragment ---
+        // Logic to calculate harvests.
+        // Assuming a pineapple harvest cycle of 18 months after planting.
         val harvests = ArrayList<BarEntry>()
-        // Pineapple harvesting is typically 18-24 months after planting. Let's assume 18.
-        val harvestMonth1 = (0 + 18) % 12 // (Jan + 18 months) -> July
-        harvests.add(BarEntry(harvestMonth1.toFloat(), 1f))
-        val harvestMonth2 = (2 + 18) % 12 // (Mar + 18 months) -> September
-        harvests.add(BarEntry(harvestMonth2.toFloat(), 1f))
-        // --- End of sample data ---
+        monthlyPlantings.forEachIndexed { plantingMonth, plantedQuantity ->
+            // The harvest will be 18 months later. The modulo finds the correct month in the year.
+            val harvestMonth = (plantingMonth + 18) % 12
+            harvests.add(BarEntry(harvestMonth.toFloat(), plantedQuantity))
+        }
 
-        // Post the values to LiveData so the UI can observe changes.
+        // Post the data to LiveData so the Fragment can observe it.
         _plantingEntries.value = plantings
-        _harvestEntries.value = harvests
+        // We group the harvests by month to show a total.
+        _harvestEntries.value = groupHarvestsByMonth(harvests)
+    }
+
+    /**
+     * Groups multiple harvest entries for the same month into a single entry.
+     */
+    private fun groupHarvestsByMonth(entries: List<BarEntry>): List<BarEntry> {
+        return entries
+            .groupBy { it.x } // Group by month (the x-value)
+            .map { (month, monthlyEntries) ->
+                // For each month, sum up the quantities (the y-values)
+                BarEntry(month, monthlyEntries.sumOf { it.y.toDouble() }.toFloat())
+            }
     }
 }
