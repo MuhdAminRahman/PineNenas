@@ -9,9 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pinenenas.data.model.Product
 import com.example.pinenenas.databinding.ItemProductBinding
-import java.text.NumberFormat
 import java.util.Currency
-import java.util.Locale
 
 class ProductAdapter(
     private val listener: OnItemClickListener,
