@@ -37,7 +37,10 @@ class MainActivity : AppCompatActivity() {
 
         // Define which top-level destinations should show the drawer icon
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.nav_home, R.id.nav_schedule, R.id.nav_profile, R.id.nav_announcement),
+            setOf(R.id.nav_home, R.id.nav_schedule,
+                R.id.nav_profile, R.id.nav_announcement,
+                R.id.nav_my_products, R.id.nav_marketplace
+            ),
             drawerLayout
         )
 
