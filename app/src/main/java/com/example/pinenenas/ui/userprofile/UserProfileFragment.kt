@@ -1,5 +1,6 @@
 package com.example.pinenenas.ui.userprofile
 
+
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +11,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+// Import NavController and findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.pinenenas.MapsActivity
+import com.example.pinenenas.R // Import R
 import com.example.pinenenas.databinding.FragmentProfileBinding
 import kotlinx.coroutines.launch
 
@@ -62,6 +66,17 @@ class UserProfileFragment : Fragment() {
                             }
                         } else {
                             binding.buttonViewOnMap.visibility = View.GONE
+                        }
+                        binding.buttonViewShop.visibility = View.VISIBLE
+                        binding.buttonViewShop.setOnClickListener {
+                            val bundle = Bundle().apply {
+                                putLong("userId", userDetail.userId)
+                                putString("shopName", userDetail.shopName)
+                            }
+                            findNavController().navigate(
+                                R.id.action_userProfileFragment_to_myShopFragment,
+                                bundle
+                            )
                         }
                     } else {
                         binding.textFullName.text = "Profile not available."

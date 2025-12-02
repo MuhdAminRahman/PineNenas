@@ -134,10 +134,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="View on Map"
+            android:text="@string/view_on_map"
             android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_shop_description"
+            tools:visibility="visible" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_view_shop"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="254dp"
+            android:layout_height="57dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/view_shop"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:icon="@drawable/ic_menu_store"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_view_on_map"
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

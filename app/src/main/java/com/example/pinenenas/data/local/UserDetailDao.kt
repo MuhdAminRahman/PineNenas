@@ -11,8 +11,10 @@ interface UserDetailDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveProfile(userProfile: UserDetail)
 
-    // Fetches the profile for a specific user ID
     @Query("SELECT * FROM user_detail WHERE userId = :userId")
     fun getProfile(userId: Long): Flow<UserDetail?>
+
+    @Query("SELECT * FROM user_detail ORDER BY shopName ASC")
+    fun getAllShops(): Flow<List<UserDetail>>
 }
     
