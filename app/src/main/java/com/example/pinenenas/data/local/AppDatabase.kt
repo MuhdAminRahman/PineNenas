@@ -9,7 +9,7 @@ import com.example.pinenenas.data.model.UserDetail
 import com.example.pinenenas.data.model.Announcement
 import com.example.pinenenas.data.model.Product
 
-@Database(entities = [User::class, UserDetail::class, Announcement::class, Product::class], version = 6, exportSchema = false)
+@Database(entities = [User::class, UserDetail::class, Announcement::class, Product::class], version = 7, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun userDetail(): UserDetailDao

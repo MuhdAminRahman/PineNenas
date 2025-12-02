@@ -32,8 +32,13 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
         contact: String,
         shopName: String,
         shopDesc: String,
-        latitude: Double?,
-        longitude: Double?
+        shopLatitude: Double?,
+        shopLongitude: Double?,
+        farmLatitude: Double?,
+        farmLongitude: Double?,
+        instagram: String?,
+        facebook: String?,
+        tiktok: String?
     ) {
         // Basic validation
         if (fullName.isBlank() || age.isBlank() || contact.isBlank() || shopName.isBlank()) {
@@ -50,8 +55,13 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
                 contactNumber = contact,
                 shopName = shopName,
                 shopDescription = shopDesc,
-                shopLatitude = latitude,
-                shopLongitude = longitude
+                shopLatitude = shopLatitude,
+                shopLongitude = shopLongitude,
+                farmLatitude = farmLatitude,
+                farmLongitude = farmLongitude,
+                instagramHandle = instagram?.takeIf { it.isNotBlank() },
+                facebookUrl = facebook?.takeIf { it.isNotBlank() },
+                tiktokHandle = tiktok?.takeIf { it.isNotBlank() }
             )
             userDetailDao.saveProfile(userDetail)
             sessionManager.saveOnboardingStatus(true)
