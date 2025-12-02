@@ -54,7 +54,6 @@ class MyShopFragment : Fragment(), ProductAdapter.OnItemClickListener {
     private fun observeShopProducts() {
         viewModel.shopProducts.observe(viewLifecycleOwner) { products ->
             products?.let {
-                // TODO: Update the ProductAdapter to hide Edit/Delete buttons
                 productAdapter.submitList(it)
             }
         }
