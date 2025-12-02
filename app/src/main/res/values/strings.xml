@@ -52,8 +52,20 @@
     <string name="price_rm">Price (RM)</string>
     <string name="quantity">Quantity</string>
     <string name="view_shop">View Shop</string>
-    <string name="view_on_map">View on Map</string>
+    <string name="view_shop_on_map">View Shop on Map</string>
     <string name="menu_my_products">My Products</string>
     <string name="menu_my_shop">My Shop</string>
     <string name="menu_marketplace">Marketplace</string>
+    <string name="facebook">Facebook</string>
+    <string name="tiktok">TikTok</string>
+    <string name="instagram">Instagram</string>
+    <string name="view_farm_on_map">View Farm on Map</string>
+    <string name="pin_shop_location_on_map">Pin Shop Location on Map</string>
+    <string name="no_location_selected">No location selected</string>
+    <string name="pin_farm_location">Pin Farm Location</string>
+    <string name="no_farm_location_selected">No farm location selected</string>
+    <string name="social_media_optional">Social Media (Optional)</string>
+    <string name="instagram_profile_url">Instagram Profile URL</string>
+    <string name="facebook_profile_url">Facebook Profile URL</string>
+    <string name="tiktok_profile_url">TikTok Profile URL</string>
 </resources>

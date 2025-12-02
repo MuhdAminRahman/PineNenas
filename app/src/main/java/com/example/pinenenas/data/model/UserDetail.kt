@@ -24,6 +24,11 @@ data class UserDetail(
     val shopName: String,
     val shopDescription: String,
     val shopLatitude: Double?,
-    val shopLongitude: Double?
+    val shopLongitude: Double?,
+    val farmLatitude: Double?,
+    val farmLongitude: Double?,
+    val instagramHandle: String? = null,
+    val facebookUrl: String? = null,
+    val tiktokHandle: String? = null
 )
     

@@ -23,7 +23,10 @@ class OnboardingFragment : Fragment() {
     private val binding get() = _binding!!
     // Get a reference to the ViewModel
     private val viewModel: OnboardingViewModel by viewModels()
-    private var selectedLatLng: LatLng? = null
+    private var selectedShopLatLng: LatLng? = null
+    private var selectedFarmLatLng: LatLng? = null
+    private var mapLauncherMode: String? = null // To know which button was clicked
+
 
     private val mapResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -31,10 +34,18 @@ class OnboardingFragment : Fragment() {
             val latitude = data?.getDoubleExtra("latitude", -1.0)
             val longitude = data?.getDoubleExtra("longitude", -1.0)
 
-            if (latitude != -1.0 && longitude != -1.0 && latitude != null && longitude != null) {
-                selectedLatLng = LatLng(latitude, longitude)
-                binding.textSelectedLocation.text = "Location Selected: ${"%.4f".format(latitude)}, ${"%.4f".format(longitude)}"
-                binding.textSelectedLocation.visibility = View.VISIBLE
+            if (latitude != null && longitude != null && latitude != -1.0 && longitude != -1.0) {
+                val selectedLatLng = LatLng(latitude, longitude)
+                // Check which location we were selecting
+                if (mapLauncherMode == "SHOP") {
+                    selectedShopLatLng = selectedLatLng
+                    binding.textSelectedShopLocation.text = "Shop Location: ${"%.4f".format(latitude)}, ${"%.4f".format(longitude)}"
+                    binding.textSelectedShopLocation.visibility = View.VISIBLE
+                } else if (mapLauncherMode == "FARM") {
+                    selectedFarmLatLng = selectedLatLng
+                    binding.textSelectedFarmLocation.text = "Farm Location: ${"%.4f".format(latitude)}, ${"%.4f".format(longitude)}"
+                    binding.textSelectedFarmLocation.visibility = View.VISIBLE
+                }
             }
         }
     }
@@ -50,53 +61,58 @@ class OnboardingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonSaveProfile.setOnClickListener {
-            saveProfileData()
-        }
-        binding.buttonPinLocation.setOnClickListener {
+        binding.buttonPinShopLocation.setOnClickListener {
+            mapLauncherMode = "SHOP" // Set mode before launching
             val intent = Intent(activity, MapsActivity::class.java).apply {
-                // Pass a flag to tell MapsActivity we are in "select" mode
                 putExtra("MODE", "SELECT")
             }
             mapResultLauncher.launch(intent)
         }
+
+        binding.buttonPinFarmLocation.setOnClickListener {
+            mapLauncherMode = "FARM" // Set mode before launching
+            val intent = Intent(activity, MapsActivity::class.java).apply {
+                putExtra("MODE", "SELECT")
+            }
+            mapResultLauncher.launch(intent)
+        }
+
+        binding.buttonSaveProfile.setOnClickListener {
+            saveProfileData()
+        }
     }
 
     private fun saveProfileData() {
-        // Get text from input fields
+        // ... (get text from input fields like fullName, age, instagram, etc.)
         val fullName = binding.editTextFullName.text.toString().trim()
         val age = binding.editTextAge.text.toString().trim()
         val contact = binding.editTextContactNumber.text.toString().trim()
         val shopName = binding.editTextShopName.text.toString().trim()
         val shopDesc = binding.editTextShopDescription.text.toString().trim()
+        val instagram = binding.editTextInstagram.text.toString().trim()
+        val facebook = binding.editTextFacebook.text.toString().trim()
+        val tiktok = binding.editTextTiktok.text.toString().trim()
 
-        // Simple validation
+        // Validation for required fields remains the same
         if (fullName.isEmpty() || age.isEmpty() || contact.isEmpty() || shopName.isEmpty()) {
             Toast.makeText(context, "Please fill all required fields", Toast.LENGTH_SHORT).show()
             return
         }
 
-        if (selectedLatLng == null) {
-            Toast.makeText(context, "Please pin your shop location", Toast.LENGTH_SHORT).show()
+        // Validation for locations
+        if (selectedShopLatLng == null) {
+            Toast.makeText(context, "Please pin your shop/pickup location", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (selectedFarmLatLng == null) {
+            Toast.makeText(context, "Please pin your farm location", Toast.LENGTH_SHORT).show()
             return
         }
 
-
-        // 1. Get an instance of the SessionManager.
         val sessionManager = SessionManager(requireContext())
-
-        // 2. Retrieve the ID of the currently logged-in user.
         val currentUserId = sessionManager.getLoggedInUserId()
+        // ... (check if currentUserId is valid) ...
 
-        // 3. Check if the ID is valid.
-        if (currentUserId == -1L) {
-            // This is a safety check. If no user is logged in, we shouldn't proceed.
-            Toast.makeText(context, "Error: No user is logged in.", Toast.LENGTH_LONG).show()
-            // Optional: Navigate back to LoginActivity
-            return
-        }
-
-        // Call the ViewModel to save the data
         viewModel.saveUserDetails(
             userId = currentUserId,
             fullName = fullName,
@@ -104,12 +120,16 @@ class OnboardingFragment : Fragment() {
             contact = contact,
             shopName = shopName,
             shopDesc = shopDesc,
-            latitude = selectedLatLng?.latitude,
-            longitude = selectedLatLng?.longitude
+            shopLatitude = selectedShopLatLng?.latitude,
+            shopLongitude = selectedShopLatLng?.longitude,
+            farmLatitude = selectedFarmLatLng?.latitude,
+            farmLongitude = selectedFarmLatLng?.longitude,
+            instagram = instagram,
+            facebook = facebook,
+            tiktok = tiktok
         )
+        // ... (navigate to MainActivity) ...
         Toast.makeText(context, "Profile Saved!", Toast.LENGTH_SHORT).show()
-
-        // Relaunch the MainActivity. It will now detect that onboarding is complete.
         val intent = Intent(activity, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
